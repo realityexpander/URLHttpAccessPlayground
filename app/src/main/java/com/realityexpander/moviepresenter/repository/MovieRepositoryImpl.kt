@@ -114,6 +114,7 @@ class MovieRepositoryImpl: MovieRepository {
     }
 
     suspend fun postMovie(post: Post): Result<PostEchoResponse> {
+        // https://jsonplaceholder.typicode.com/guide/
 //        val endpoint: String = "https://postman-echo.com/post" // does a feedback echo of the post
         val endpoint: String = "https://107ac44d-ceb5-4427-9e71-0bcd2d1a7e49.mock.pstmn.io/post" // movies using PostMan mock server
 
@@ -121,6 +122,7 @@ class MovieRepositoryImpl: MovieRepository {
             try {
                 with(URL(endpoint).openConnection() as HttpURLConnection) {
                     requestMethod = "POST"
+                    doOutput = true
 
 //                    val user = "username"
 //                    val password = "password"
@@ -134,7 +136,6 @@ class MovieRepositoryImpl: MovieRepository {
 //                    setRequestProperty("x-api-key", "<** get from postman settings **>")
 //                    setRequestProperty("x-mock-response-code", "401")
 
-                    doOutput = true
 
                     sendRequest(requestBody = post)
                         .map{// success case
