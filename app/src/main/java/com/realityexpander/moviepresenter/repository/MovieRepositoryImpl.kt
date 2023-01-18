@@ -1,25 +1,24 @@
 package com.realityexpander.moviepresenter.repository
 
 import android.graphics.BitmapFactory
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.util.Base64
 import com.realityexpander.moviepresenter.BuildConfig
 import com.realityexpander.moviepresenter.Constants
-import com.realityexpander.moviepresenter.model.HttpError
-import com.realityexpander.moviepresenter.model.MovieModel
-import com.realityexpander.moviepresenter.model.Post
+import com.realityexpander.moviepresenter.model.*
 import com.realityexpander.moviepresenter.model.PostEchoResponse.PostEchoResponse
-import com.realityexpander.moviepresenter.model.TMDBResponse
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.BufferedInputStream
 import java.io.IOException
+import java.net.Authenticator
 import java.net.HttpURLConnection
+import java.net.PasswordAuthentication
 import java.net.URL
-import java.nio.charset.StandardCharsets
-import java.util.*
 
 val json = Json { ignoreUnknownKeys = true }
 
@@ -114,25 +113,27 @@ class MovieRepositoryImpl: MovieRepository {
         return Result.failure(Exception(Json.encodeToString(HttpError(code, errorResponse ?: ""))))
     }
 
-//    @RequiresApi(Build.VERSION_CODES.O) // for Base64.getEncoder()
     suspend fun postMovie(post: Post): Result<PostEchoResponse> {
 //        val endpoint: String = "https://postman-echo.com/post" // does a feedback echo of the post
-        val endpoint: String = "https://97cd9eac-d7fb-49ad-bce2-24b923e89d55.mock.pstmn.io/post" // using PostMan mock server
+        val endpoint: String = "https://107ac44d-ceb5-4427-9e71-0bcd2d1a7e49.mock.pstmn.io/post" // movies using PostMan mock server
 
         return withContext(Dispatchers.IO) {
             try {
                 with(URL(endpoint).openConnection() as HttpURLConnection) {
                     requestMethod = "POST"
-                    val user = "username"
-                    val password = "password"
-                    val authCredentials = "$user:$password"
+
+//                    val user = "username"
+//                    val password = "password"
+//                    val authCredentials = "$user:$password"
 //                    val encodedAuth = Base64.encodeToString(authCredentials.toByteArray(), Base64.NO_WRAP) // uses android.util.Base64
-                    val encodedAuth = Base64.getEncoder().encodeToString(authCredentials.toByteArray(StandardCharsets.UTF_8))
-                    setRequestProperty("Authorization", "Basic $encodedAuth")
+////                    val encodedAuth = Base64.getEncoder().encodeToString(authCredentials.toByteArray(StandardCharsets.UTF_8)) // uses java.util.*
+//                    setRequestProperty("Authorization", "Basic $encodedAuth")
 
 //                    setRequestProperty("Content-type", "application/json; charset=UTF-8")
-                    setRequestProperty("Content-Length", Json.encodeToString(post).toByteArray().size.toString())
-                    setRequestProperty("x-api-key", "PMAK-63c75f54b3729d710e1cdaf6-39e48098a1e1e11a649ad6714f4245f78d")
+//                    setRequestProperty("Content-Length", Json.encodeToString(post).toByteArray().size.toString())
+//                    setRequestProperty("x-api-key", "<** get from postman settings **>")
+//                    setRequestProperty("x-mock-response-code", "401")
+
                     doOutput = true
 
                     sendRequest(requestBody = post)

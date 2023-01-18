@@ -10,6 +10,8 @@ import androidx.lifecycle.viewModelScope
 import com.realityexpander.moviepresenter.network.NetworkConnectivityManager
 import com.realityexpander.moviepresenter.repository.MovieRepositoryImpl
 import kotlinx.coroutines.launch
+import java.net.Authenticator
+import java.net.PasswordAuthentication
 
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
